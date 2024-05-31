@@ -3,32 +3,35 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main   #Puxando o codigo da branch main
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest #Build em ubunto - docker
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code  #checkout na branch do codigo
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx  #configura o docker
+    - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Cache Docker layers  #cria as layers de cash
+    - name: Cache Docker layers
       uses: actions/cache@v2
       with:
-        path: /tmp/.buildx-cache   #busca as credenciais 
+        path: /tmp/.buildx-cache
         key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build Docker image #criar uma imagem no docker
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Build Docker image
       run: docker-compose build
 
-    - name: Run tests  #roda os tests
+    - name: Run tests
       run: docker-compose run --rm test
 
-    - name: Deploy #deploy da API
+    - name: Deploy
       run: docker-compose up -d
