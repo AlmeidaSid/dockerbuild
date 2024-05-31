@@ -4,17 +4,17 @@ services:
   web:
     build: .
     ports:
-      - "5000:5000"
+      - "5000:5000"  #porta local
     volumes:
       - .:/app
     environment:
       FLASK_APP: app
       FLASK_ENV: development
-    command: flask run --host=0.0.0.0
+    command: flask run --host=0.0.0.0  # inicia o sever local
 
   test:
     build: .
-    command: pytest
+    command: pytest  #roda o test
     volumes:
       - .:/app
     environment:
